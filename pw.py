@@ -4,7 +4,7 @@ import os
 import signal
 import subprocess
 import sys
-import time
+from datetime import datetime
 
 try:
    TIMEOUT_NO_ACTIVITY_SECONDS = int(os.getenv('TIMEOUT_NO_ACTIVITY_SECONDS', 60))
@@ -22,9 +22,7 @@ def timeout_handler(signum, frame):
 
 def execute(cmd):
     signal.signal(signal.SIGALRM, timeout_handler)
-
     shutdown = False
-    last_job_time=time.time()
     while not shutdown:
         proc = subprocess.Popen(cmd,
                                 bufsize=0,
@@ -36,19 +34,11 @@ def execute(cmd):
             signal.alarm(TIMEOUT_NO_ACTIVITY_SECONDS)
             for line in iter(proc.stdout.readline, ""):
                 line = line.strip()
-                job_time_delta=time.time()-last_job_time
-                print(line)
+                current_time=str(datetime.now())
+                #print(line)
                 #print("Last job was %f ms ago" % job_time_delta)
-                if job_time_delta>120:
-                    last_job_time=time.time()
-                    raise MinerException('****** Restarting due to not getting new jobs')
-                if (line.find('Received new job'))>=0:
-                    print("Time since last job: %f ms" % job_time_delta)
-                    last_job_time=time.time()
-                if line.startswith('Could not resolve host'):
-                    raise MinerException('****** Restarting due to DNS error')
-                if line.startswith('CUDA error'):
-                    raise MinerException('****** Restarting due to CUDA error')
+                if line.endswith("Destination Host Unreachable"):
+                    print("Connectivity issue at: %s" % current_time)
                 signal.alarm(TIMEOUT_NO_ACTIVITY_SECONDS)
         except (MinerException, TimeoutException) as e:
             print('\n\n', str(e), '\n\n')
