@@ -35,10 +35,10 @@ def execute(cmd):
             for line in iter(proc.stdout.readline, ""):
                 line = line.strip()
                 current_time=str(datetime.now())
-                if line.endswith("Destination Host Unreachable"):
+                if line.endswith('Destination Host Unreachable'):
                     print("Connectivity issue at: %s" % current_time)
                     print("Original message: %s" % line) 
-                if line.find('Received new job')>=0:
+                if line.find('no answer yet')>=0:
                     print("Connectivity issue at: %s" % current_time)
                     print("Original message: %s" % line) 
                 signal.alarm(TIMEOUT_NO_ACTIVITY_SECONDS)
