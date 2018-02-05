@@ -5,6 +5,6 @@ QUICK HOWTO:
 
 chmod +x ./pw.py
 
-./pw.py ping -D -O -W.5 <dst_ip>
+./pw.py ping -D -O -W.5 10.20.0.28
 
 This code is based on https://gist.github.com/jaddison/d4966f9e789d1d6e987fda49638a284b
