@@ -35,10 +35,12 @@ def execute(cmd):
             for line in iter(proc.stdout.readline, ""):
                 line = line.strip()
                 current_time=str(datetime.now())
-                #print(line)
-                #print("Last job was %f ms ago" % job_time_delta)
                 if line.endswith("Destination Host Unreachable"):
                     print("Connectivity issue at: %s" % current_time)
+                    print("Original message: %s" % line) 
+                if line.find('Received new job')>=0:
+                    print("Connectivity issue at: %s" % current_time)
+                    print("Original message: %s" % line) 
                 signal.alarm(TIMEOUT_NO_ACTIVITY_SECONDS)
         except (MinerException, TimeoutException) as e:
             print('\n\n', str(e), '\n\n')
