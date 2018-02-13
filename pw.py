@@ -18,7 +18,7 @@ class TimeoutException(Exception):
     pass
     
 def timeout_handler(signum, frame):
-    raise TimeoutException("No activity from ethminer for {} seconds".format(TIMEOUT_NO_ACTIVITY_SECONDS))
+    raise TimeoutException("No activity from ping for {} seconds".format(TIMEOUT_NO_ACTIVITY_SECONDS))
 
 def execute(cmd):
     signal.signal(signal.SIGALRM, timeout_handler)
